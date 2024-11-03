@@ -5,10 +5,9 @@
 
 Basic ICMP Documentation
 ========================
-Group 76
----------
-Emre Safa Baltacı - 2580314
-Alperen Tasdelen - 2521987
+
+Please add your names and group ID here by editing `index.rst` in the docs folder.
+
 
 .. toctree::
    :maxdepth: 2
