@@ -1,14 +1,13 @@
-.. Basic ICMP documentation master file, created by
-   sphinx-quickstart on Fri Oct 18 16:20:21 2024.
+.. Covert Channel documentation master file, created by
+   sphinx-quickstart on Sat Nov 16 23:32:55 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Basic ICMP Documentation
-========================
-Group 76
----------
-Emre Safa Baltacı - 2580314
-Alperen Tasdelen - 2521987
+Covert Channel documentation
+============================
+
+Please add your names, group ID, and your link to the forked public repository here by editing `index.rst` in the docs folder.
+
 
 .. toctree::
    :maxdepth: 2

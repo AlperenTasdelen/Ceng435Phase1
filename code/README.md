@@ -1,2 +1,3 @@
-# Coding
-You can develop your code in sender and receiver folders. Be careful entire folder is mounted to the `/app` folder in both containers.
+# Replace with Your Covert Channel Name
+
+Explain your study in detail as you share your work with the community in a public repository. Anyone should understand your project when read it without having a previous information about the homework.
