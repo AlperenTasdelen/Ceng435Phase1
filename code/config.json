@@ -1,21 +1,21 @@
 {
-  "covert_channel_code": "CTC-IPPB-DNS",
+  "covert_channel_code": "CSC-PSV-DNS-ACFS",
   "send": {
     "parameters": {
       "log_file_name": "Example_UDPTimingInterarrivalChannelSender.log",
       "target_ip": "172.18.0.3",
-      "domain": "example.com",
+      "domain": "",
       "short_idle": 0.1,
       "long_idle": 0.3,
-      "burst_size": 3
+      "burst_size": 1
     }
   },
   "receive": {
     "parameters": {
-      "target_ip": "172.18.0.3",
+      "target_ip": "172.18.0.2",
       "short_idle": 0.1,
       "long_idle": 0.3,
-      "tolerance": 0.05,
+      "tolerance": 0.12,
       "log_file_name": "Example_UDPTimingInterarrivalChannelReceiver.log"
     }
   }
