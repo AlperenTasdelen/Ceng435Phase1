@@ -5,34 +5,16 @@ Covert Timing Channel that exploits Idle Period Between Packet Bursts using DNS
 from CovertChannelBase import CovertChannelBase
 import time
 import random
-from scapy.all import IP, UDP, DNS, DNSQR, sniff, DNSRR
+from scapy.all import IP, UDP, DNS, DNSQR, sniff
 
 class MyCovertChannel(CovertChannelBase):
-    """
-    - You are not allowed to change the file name and class name.
-    - You can edit the class in any way you want (e.g. adding helper functions); however, there must be a "send" and a "receive" function, the covert channel will be triggered by calling these functions.
-    """
     def __init__(self):
-        """
-        - You can edit __init__.
-        """
         super().__init__()
 
     def send(self, log_file_name, target_ip, domain, short_idle, long_idle, burst_size):
-        """
-        - In this function, you expected to create a random message (using function/s in CovertChannelBase), and send it to the receiver container. Entire sending operations should be handled in this function.
-        - After the implementation, please rewrite this comment part to explain your code basically.
-
-        Parameters:
-        - log_file_name: Name of the log file to store the sent message.
-        - target_ip: Target IP for DNS queries.
-        - domain: Target domain for DNS queries.
-        - short_idle: Short idle period (seconds) representing binary '1'.
-        - long_idle: Long idle period (seconds) representing binary '0'.
-        - burst_size: Number of packets in each burst.        
-        """
         binary_message = self.generate_random_binary_message_with_logging(log_file_name, 16, 16)
         binary_message += '.' # Stop packet
+        start_time = time.time()
 
         # Send the encoded message
         for bit in binary_message:
@@ -42,35 +24,22 @@ class MyCovertChannel(CovertChannelBase):
                     UDP(dport=53) /
                     DNS(
                         rd=1,
-                        qd=DNSQR(qname=domain, qtype='A'),
-                        an=DNSRR(rrname=domain, rdata=target_ip)
+                        qd=DNSQR(qname=domain, qtype='A')
                     )
                 )
                 CovertChannelBase.send(self, dns_packet)
-                print(f"Sent bit: {bit}")
                 
             if bit == '1':
                 time.sleep(short_idle)
             elif bit == '0':
                 time.sleep(long_idle)
 
-                
-        print("Sent stop packet.")
+        end_time = time.time()
+        print("Bits per second: ", 128 / (end_time - start_time))
+        print("Message sent successfully.")
         
 
     def receive(self, target_ip, short_idle, long_idle, tolerance, log_file_name):
-        """
-        - In this function, you are expected to receive and decode the transferred message. Because there are many types of covert channels, the receiver implementation depends on the chosen covert channel type, and you may not need to use the functions in CovertChannelBase.
-        - After the implementation, please rewrite this comment part to explain your code basically.
-
-        Parameters:
-        - target_ip: Target IP for DNS queries.
-        - short_idle: Short idle period (seconds) representing binary '1'.
-        - long_idle: Long idle period (seconds) representing binary '0'.
-        - tolerance: Tolerance for the idle periods.
-        - log_file_name: Name of the log file to store the received message.
-        """
-        
         received_message = ""
         received_bytes = ""
         last_packet_time = None
@@ -85,13 +54,11 @@ class MyCovertChannel(CovertChannelBase):
             # Decode the time-based bit
             if last_packet_time is not None:
                 time_diff = time.time() - last_packet_time
-
-                if abs(time_diff - short_idle) <= tolerance:
-                    received_bytes += "1"
-                    print("Decoded bit: 1")
-                elif abs(time_diff - long_idle) <= tolerance:
-                    received_bytes += "0"
-                    print("Decoded bit: 0")
+                
+                if abs(time_diff - short_idle) < tolerance:
+                    received_bytes += '1'
+                elif abs(time_diff - long_idle) < tolerance:
+                    received_bytes += '0'
 
             # Convert bits to bytes
             if len(received_bytes) >= 8:
@@ -100,11 +67,10 @@ class MyCovertChannel(CovertChannelBase):
                 if (decoded_byte == '.'):
                     print("Stop packet received. Ending reception.")
                     self.log_message(received_message, log_file_name)
-                    print(f"Decoded message: {received_message}")
                     exit()
                     return
+                print(f"Received byte: {received_bytes} -> {decoded_byte}")
             
-                print(f"Decoded byte: {received_bytes} -> {decoded_byte}")
                 received_bytes = ""
 
             last_packet_time = time.time()
@@ -113,5 +79,4 @@ class MyCovertChannel(CovertChannelBase):
 
         # Log the decoded message
         self.log_message(received_message, log_file_name)
-        print(f"Decoded message: {received_message}")
 

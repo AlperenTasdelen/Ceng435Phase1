@@ -1,5 +1,5 @@
 {
-  "covert_channel_code": "CSC-PSV-DNS-ACFS",
+  "covert_channel_code": "CTC-IPPB-DNS",
   "send": {
     "parameters": {
       "log_file_name": "Example_UDPTimingInterarrivalChannelSender.log",
